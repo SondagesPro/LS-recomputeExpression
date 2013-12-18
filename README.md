@@ -12,8 +12,9 @@ Via GIT
 - Clone in plugins/recomputeExpression directory `git clone https://github.com/Shnoulle/LS-recomputeExpression.git plugins/recomputeExpression`
 
 Via ZIP dowload
--* Get the file and uncompress it
--* Move the file included to plugins/recomputeExpression directory
+---------------
+- Get the file and uncompress it
+- Move the file included to plugins/recomputeExpression directory
 
 Purpose
 =======
