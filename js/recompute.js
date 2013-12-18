@@ -36,7 +36,7 @@ function addUpdateResponse()
         // Find the response id
         var responseId=aUrl[aUrl.indexOf("id")+1];
         // OR var responseId= aUrl.pop();
-        $('.menubar').eq(1).find('.menubar-main').find(".menubar-left:last").append("<a class='updateanswer' data-responseid='"+responseId+"'>Update This Answer</a>");
+        $('.menubar').eq(1).find('.menubar-main').find(".menubar-left:last").append("<a class='btn btn-small updateanswer' data-responseid='"+responseId+"'><i class='icon-refresh'></i>Update This Answer</a>");
         $('.updateanswer').click(function(){
 
             $("#updatedsrid").remove();
@@ -79,7 +79,7 @@ function addUpdateResponse()
         });
     }
     if(controllers=='responses'){
-        $('.menubar').eq(0).find('.menubar-main').find(".menubar-left:last").append("<a class='updateanswers'>Update all submitted answers</a>");
+        $('.menubar').eq(0).find('.menubar-main').find(".menubar-left:last").append("<a class='btn btn-small updateanswers'><i class='icon-refresh'></i>Update all submitted answers</a>");
             $(".updateanswers").click(function(){
                 var jsonurl=$(this).attr('rel');
                   $("#updatedsrid").remove();
