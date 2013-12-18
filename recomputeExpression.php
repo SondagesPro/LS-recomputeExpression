@@ -269,6 +269,7 @@
         }
         private function displayJson()
         {
+            Yii::import('application.helpers.viewHelper');
             viewHelper::disableHtmlLogging();
             header('Content-type: application/json');
             echo json_encode(array(
