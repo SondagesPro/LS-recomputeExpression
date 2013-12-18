@@ -20,6 +20,7 @@ After updating a Equation question type : response are not updated with the new 
 After editing a response via the admin access the Equation question type and the relevance status are broken. This plugin allow to fix the Equation and the relevance Status.
 
 ##Copyright
-Copyright © 2013 Denis Chenu <http://sondages.pro>
-Copyright © 2013 Practice Lab <http://www.practicelab.com/>
+- Copyright © 2013 Denis Chenu <http://sondages.pro>
+- Copyright © 2013 Practice Lab <http://www.practicelab.com/>
+
 Distributed under [GNU GENERAL PUBLIC LICENSE Version 3](http://www.gnu.org/licenses/gpl.txt) licence
