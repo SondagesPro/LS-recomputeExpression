@@ -30,7 +30,12 @@ function addUpdateResponse()
     var jsonUrl=recomputeVar.jsonurl;
     var aUrl=docUrl.split('/');
     var surveyid=aUrl[aUrl.indexOf("surveyid")+1];
-    var controllers=aUrl[aUrl.indexOf("admin")+1];
+    if(aUrl.indexOf("admin")>0){
+        var controller=aUrl[aUrl.indexOf("admin")+1];
+    }else{
+        var controller=aUrl[aUrl.indexOf("?r=admin")+1];
+    }
+
     if($('table.detailbrowsetable').length>0)// Browse one response
     {
         // Find the response id
@@ -78,7 +83,7 @@ function addUpdateResponse()
             });
         });
     }
-    if(controllers=='responses'){
+    if(controller=='responses'){
         $('.menubar').eq(0).find('.menubar-main').find(".menubar-left:last").append("<a class='btn btn-small updateanswers'><i class='icon-refresh'></i>Update all submitted answers</a>");
             $(".updateanswers").click(function(){
                 var jsonurl=$(this).attr('rel');
