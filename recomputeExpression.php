@@ -41,7 +41,7 @@
             'sNullNoRelevance' => array(
                 'type' => 'select',
                 'label' => 'Validate all relevance for question, and null value if needed',
-                'default'=> "allways",
+                'default'=> "deletenonvalues",
                 'options' => array(
                     "allways"=>"Allways (no test of deletenonvalues)",
                     "deletenonvalues"=>"According to deletenonvalues config",
