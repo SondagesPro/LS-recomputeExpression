@@ -7,7 +7,7 @@ A Plugin for LimeSurvey to recompute expression in survey and fix relevance
 
 ### Via GIT
 - Go to your LimeSurvey Directory (version up to 2.05)
-- Clone in plugins/recomputeExpression directory `git clone https://github.com/Shnoulle/LS-recomputeExpression.git plugins/recomputeExpression`
+- Clone in plugins/recomputeExpression directory
 
 ### Via ZIP dowload
 - Get the file and uncompress it
