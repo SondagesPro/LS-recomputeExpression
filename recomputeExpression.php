@@ -132,7 +132,11 @@
             }
             elseif($bDoNext && $this->bIsAdmin)
             {
-                $oResponse=SurveyDynamic::model($iSurveyId)->find("submitdate IS NOT NULL",array("order"=>"id"));
+                $oResponse=SurveyDynamic::model($iSurveyId)->find(
+                    'select'=>'id',
+                    'condition'=>'submitdate IS NOT NULL',
+                    'order'=>'id',
+                );
                 if(!$oResponse)
                     $this->sMessage="No submited response";
             }
