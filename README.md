@@ -26,7 +26,7 @@ After updating a Equation question type : response are not updated with the new 
 
 ## Home page & Copyright
 - HomePage <http://extensions.sondages.pro/recomputeexpression-for-limesurvey/>
-- Copyright © 2013 Denis Chenu <http://sondages.pro>
-- Copyright © 2013 Practice Lab <http://www.practicelab.com/>
+- Copyright © 2013-2015 Denis Chenu <http://sondages.pro>
+- Copyright © 2013-2015 Practice Lab <http://www.practicelab.com/>
 
 Distributed under [GNU GENERAL PUBLIC LICENSE Version 3](http://www.gnu.org/licenses/gpl.txt) licence
