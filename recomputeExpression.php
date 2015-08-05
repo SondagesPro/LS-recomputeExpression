@@ -132,10 +132,12 @@
             }
             elseif($bDoNext && $this->bIsAdmin)
             {
-                $oResponse=SurveyDynamic::model($iSurveyId)->find(
-                    'select'=>'id',
-                    'condition'=>'submitdate IS NOT NULL',
-                    'order'=>'id',
+                $oResponse=SurveyDynamic::model($iSurveyId)->find( 
+                    array(
+                        'select'=>'id',
+                        'condition'=>'submitdate IS NOT NULL',
+                        'order'=>'id'
+                    )
                 );
                 if(!$oResponse)
                     $this->sMessage="No submited response";
@@ -230,7 +232,7 @@
                         {
                             //($string, $questionNum=NULL, $replacementFields=array(), $debug=false, $numRecursionLevels=1, $whichPrettyPrintIteration=1, $noReplacements=false, $timeit=true, $staticReplacement=false)
                             $oldVal=$oResponse->$column;
-                            $newVal=$oResponse->$column=LimeExpressionManager::ProcessString($aFieldMap[$column]['question']);
+                            $newVal=$oResponse->$column=LimeExpressionManager::ProcessString($aFieldMap[$column]['question'], null, array(), false, 1, 0, false, false, true);
                             if($oldVal!=$newVal && ($oldVal && $newVal))
                             {
                                 $updatedValues['old'][$sColumnName]=$oldVal;
