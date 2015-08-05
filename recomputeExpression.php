@@ -134,7 +134,6 @@
             {
                 $oResponse=SurveyDynamic::model($iSurveyId)->find( 
                     array(
-                        'select'=>'id',
                         'condition'=>'submitdate IS NOT NULL',
                         'order'=>'id'
                     )
