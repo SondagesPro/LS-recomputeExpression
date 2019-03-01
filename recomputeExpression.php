@@ -62,9 +62,13 @@
         public function afterPluginLoad()
         {
             if(strpos(Yii::app()->request->getRequestUri(),'admin/responses')){// Hack to register only on browse response
+                $surveyid = Yii::app()->request->getparam('surveyid');
+                $responseid = Yii::app()->request->getparam('id');
                 $aRecomputeVar=array(
-                        'jsonurl'=>$this->api->createUrl('plugins/direct', array('plugin' => 'recomputeExpression', 'function' => 'recompute'))
-                    );
+                    'jsonurl'=>$this->api->createUrl('plugins/direct', array('plugin' => 'recomputeExpression', 'function' => 'recompute')),
+                    'surveyId'=>$surveyid,
+                    'responseId'=>$responseid,
+                );
                 Yii::app()->getClientScript()->registerScript('aRecomputeVar','recomputeVar='.json_encode($aRecomputeVar),CClientScript::POS_BEGIN);
                 Yii::app()->getClientScript()->registerScriptFile(Yii::app()->getConfig('publicurl')."plugins/recomputeExpression/js/recompute.js");
             }
@@ -146,7 +150,7 @@
             {
                 $iResponseId=$oResponse->id;
                 $aOldAnswers=$oResponse->attributes; // Not needed but keep it
-                
+
                 if(isset($oResponse->token) && $oResponse->token)
                     $sToken=$oResponse->token;
                 // Fill $_SESSION['survey_'.$iSurveyId]
@@ -231,7 +235,12 @@
                         {
                             //($string, $questionNum=NULL, $replacementFields=array(), $debug=false, $numRecursionLevels=1, $whichPrettyPrintIteration=1, $noReplacements=false, $timeit=true, $staticReplacement=false)
                             $oldVal=$oResponse->$column;
-                            $newVal=$oResponse->$column=LimeExpressionManager::ProcessString($aFieldMap[$column]['question'], null, array(), false, 1, 0, false, false, true);
+                            $equation = $aFieldMap[$column]['question'];
+                            $equationAttribute = QuestionAttribute::model()->find("qid = :qid and attribute = :attribute",array(":qid"=>$aFieldMap[$column]['qid'],":attribute"=>'equation'));
+                            if(!empty($equationAttribute) && !empty($equationAttribute->value)) {
+                                $equation = $equationAttribute->value;
+                            }
+                            $newVal=$oResponse->$column=LimeExpressionManager::ProcessString($equation, null, array(), false, 1, 0, false, false, true);
                             if($oldVal!=$newVal && ($oldVal && $newVal))
                             {
                                 $updatedValues['old'][$sColumnName]=$oldVal;

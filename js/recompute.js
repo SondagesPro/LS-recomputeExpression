@@ -20,7 +20,7 @@
  
  $(function() {
     if(typeof recomputeVar!='undefined'){
-    addUpdateResponse();
+        addUpdateResponse();
     }
 });
 
@@ -29,17 +29,11 @@ function addUpdateResponse()
     var docUrl=document.URL;
     var jsonUrl=recomputeVar.jsonurl;
     var aUrl=docUrl.split('/');
-    var surveyid=aUrl[aUrl.indexOf("surveyid")+1];
-    if(aUrl.indexOf("admin")>0){
-        var controller=aUrl[aUrl.indexOf("admin")+1];
-    }else{
-        var controller=aUrl[aUrl.indexOf("?r=admin")+1];
-    }
+    var surveyid=recomputeVar.surveyId;
+    var responseId=recomputeVar.responseId;
 
-    if($('table.detailbrowsetable').length>0)// Browse one response
+    if(responseId && $('table.detailbrowsetable').length>0)// Browse one response
     {
-        // Find the response id
-        var responseId=aUrl[aUrl.indexOf("id")+1];
         // OR var responseId= aUrl.pop();
         $('.menubar').eq(1).find('.menubar-main').find(".menubar-left:last").append("<a class='btn btn-small updateanswer' data-responseid='"+responseId+"'><i class='icon-refresh'></i>Update This Answer</a>");
         $('.updateanswer').click(function(){
@@ -83,7 +77,7 @@ function addUpdateResponse()
             });
         });
     }
-    if(controller=='responses'){
+    if(surveyid){
         $('.menubar').eq(0).find('.menubar-main').find(".menubar-left:last").append("<a class='btn btn-small updateanswers'><i class='icon-refresh'></i>Update all submitted answers</a>");
             $(".updateanswers").click(function(){
                 var jsonurl=$(this).attr('rel');
