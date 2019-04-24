@@ -7,7 +7,7 @@
  * @copyright 2013 Denis Chenu <http://sondages.pro>
  * @copyright 2013 Practice Lab <https://www.practicelab.com/>
  * @license GPL v3
- * @version 2.0.1
+ * @version 2.0.2
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,6 +33,7 @@ class recomputeExpression extends PluginBase
     private $aUpdatedArray=array();
 
     private $_iSurveyId;
+    private $_iResponseId;
 
     protected $settings = array(
         'bAllowNonAdmin' => array(
@@ -92,7 +93,7 @@ class recomputeExpression extends PluginBase
     public function actionRecompute()
     {
         // Needed parameters sid: the survey id
-        $this->__iSurveyId = $iSurveyId=(int)Yii::app()->request->getQuery('sid', 0);
+        $this->_iSurveyId = $iSurveyId=(int)Yii::app()->request->getQuery('sid', 0);
         // Optionnal parameters : token
         $sToken=(string)Yii::app()->request->getQuery('token', "");
         // Optionnal parameters : srid
@@ -149,7 +150,7 @@ class recomputeExpression extends PluginBase
 
         if($oResponse)
         {
-            $iResponseId=$oResponse->id;
+            $this->_iResponseId = $iResponseId=$oResponse->id;
             $aOldAnswers=$oResponse->attributes; // Not needed but keep it
 
             if(isset($oResponse->token) && $oResponse->token)
@@ -241,7 +242,7 @@ class recomputeExpression extends PluginBase
                         if(!empty($equationAttribute) && !empty($equationAttribute->value)) {
                             $equation = $equationAttribute->value;
                         }
-                        $newVal=$oResponse->$column=$this->this->_EMProcessString($equation);
+                        $newVal=$oResponse->$column=$this->_EMProcessString($equation);
                         if($oldVal!=$newVal && ($oldVal && $newVal))
                         {
                             $updatedValues['old'][$sColumnName]=$oldVal;

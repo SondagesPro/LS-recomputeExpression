@@ -89,7 +89,7 @@ function addUpdateResponse()
         if($('.menubar').eq(1).find('.menubar-main').find(".menubar-left:last").length) {
             $('.menubar').eq(1).find('.menubar-main').find(".menubar-left:last").append("<a class='btn btn-small updateanswer' data-recompute='1'><i class='icon-refresh'></i>Update This Answer</a>");
         } else {
-            $('#browsermenubarid .container-fluid .col-md-12').append("<a class='btn btn-small updateanswer' data-recompute='1'><i class='icon-refresh'></i>Update all submitted answers</a>");
+            $('#browsermenubarid .container-fluid .col-md-12').append("<a class='btn btn-default btn-small updateanswer' data-recompute='1'><i class='icon-refresh'></i>Update all submitted answers</a>");
         }
             $("[data-recompute]").click(function(){
                   $("#updatedsrid").remove();
