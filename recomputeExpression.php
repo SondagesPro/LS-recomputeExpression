@@ -7,7 +7,7 @@
  * @copyright 2013 Denis Chenu <http://sondages.pro>
  * @copyright 2013 Practice Lab <https://www.practicelab.com/>
  * @license GPL v3
- * @version 2.0.0
+ * @version 2.0.1
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,6 +31,8 @@ class recomputeExpression extends PluginBase
     private $iUpdatedValueCount=0;
     private $iNulledValueCount=0;
     private $aUpdatedArray=array();
+
+    private $_iSurveyId;
 
     protected $settings = array(
         'bAllowNonAdmin' => array(
@@ -90,7 +92,7 @@ class recomputeExpression extends PluginBase
     public function actionRecompute()
     {
         // Needed parameters sid: the survey id
-        $iSurveyId=(int)Yii::app()->request->getQuery('sid', 0);
+        $this->__iSurveyId = $iSurveyId=(int)Yii::app()->request->getQuery('sid', 0);
         // Optionnal parameters : token
         $sToken=(string)Yii::app()->request->getQuery('token', "");
         // Optionnal parameters : srid
@@ -217,7 +219,7 @@ class recomputeExpression extends PluginBase
                     $bRelevance=true;
                     if($bNullNoRelevance && isset($aFieldMap[$column]['relevance']) && trim($aFieldMap[$column]['relevance']!=""))
                     {
-                        $bRelevance= (bool)LimeExpressionManager::ProcessString("{".$aFieldMap[$column]['relevance']."}");
+                        $bRelevance= (bool)$this->_EMProcessString("{".$aFieldMap[$column]['relevance']."}");
                         if(!$bRelevance)
                         {
                             if(!is_null($oResponse->$column))
@@ -239,7 +241,7 @@ class recomputeExpression extends PluginBase
                         if(!empty($equationAttribute) && !empty($equationAttribute->value)) {
                             $equation = $equationAttribute->value;
                         }
-                        $newVal=$oResponse->$column=LimeExpressionManager::ProcessString($equation, null, array(), false, 1, 0, false, false, true);
+                        $newVal=$oResponse->$column=$this->this->_EMProcessString($equation);
                         if($oldVal!=$newVal && ($oldVal && $newVal))
                         {
                             $updatedValues['old'][$sColumnName]=$oldVal;
@@ -291,5 +293,29 @@ class recomputeExpression extends PluginBase
             "next"=>$this->iNext
             ));
         die();
+    }
+
+    /**
+     * Process a string via expression manager (static way)
+     * @param string $string
+     * @return string
+     */
+    private function _EMProcessString($string)
+    {
+        Yii::app()->setConfig('surveyID',$this->_iSurveyId);
+        $oSurvey=Survey::model()->findByPk($this->_iSurveyId);
+        $replacementFields=array(
+            'SAVEDID'=>$this->_iResponseId,
+            'SITENAME'=>App()->getConfig('sitename'),
+            'SURVEYNAME'=>$oSurvey->getLocalizedTitle(),
+            'SURVEYRESOURCESURL'=> Yii::app()->getConfig("uploadurl").'/surveys/'.$this->_iSurveyId.'/'
+        );
+        if(intval(Yii::app()->getConfig('versionnumber'))<3) {
+            return \LimeExpressionManager::ProcessString($string, null, $replacementFields, false, 3, 0, false, false, true);
+        }
+        if(version_compare(Yii::app()->getConfig('versionnumber'),"3.6.2","<")) {
+            return \LimeExpressionManager::ProcessString($string, null, $replacementFields, 3, 0, false, false, true);
+        }
+        return \LimeExpressionManager::ProcessStepString($string, true, 3, $replacementFields);
     }
 }
