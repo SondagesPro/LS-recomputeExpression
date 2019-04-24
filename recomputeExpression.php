@@ -50,8 +50,7 @@ class recomputeExpression extends PluginBase
         ),
     );
     protected $storage = 'DbStorage';
-    public function __construct(PluginManager $manager, $id) {
-        parent::__construct($manager, $id);
+    public function init() {
         // Add the script (everywhere)
         $this->subscribe('afterPluginLoad');
         //Can call plugin
@@ -70,7 +69,7 @@ class recomputeExpression extends PluginBase
                 'responseId'=>$responseid,
             );
             Yii::app()->getClientScript()->registerScript('aRecomputeVar','recomputeVar='.json_encode($aRecomputeVar),CClientScript::POS_BEGIN);
-            Yii::app()->getClientScript()->registerScriptFile(Yii::app()->getConfig('publicurl')."plugins/recomputeExpression/js/recompute.js");
+            Yii::app()->getClientScript()->registerScriptFile(Yii::app()->assetManager->publish(dirname(__FILE__) . '/js/recompute.js'));
         }
     }
     public function newDirectRequest()

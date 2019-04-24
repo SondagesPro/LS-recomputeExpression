@@ -18,7 +18,7 @@
  * GNU General Public License for more details.
  */
  
- $(function() {
+$(document).on('ready pjax:scriptcomplete', function() {
     if(typeof recomputeVar!='undefined'){
         addUpdateResponse();
     }
@@ -31,13 +31,20 @@ function addUpdateResponse()
     var aUrl=docUrl.split('/');
     var surveyid=recomputeVar.surveyId;
     var responseId=recomputeVar.responseId;
-
+    console.warn([
+        surveyid,
+        responseId,
+        $('table.detailbrowsetable').length
+    ]);
     if(responseId && $('table.detailbrowsetable').length>0)// Browse one response
     {
         // OR var responseId= aUrl.pop();
-        $('.menubar').eq(1).find('.menubar-main').find(".menubar-left:last").append("<a class='btn btn-small updateanswer' data-responseid='"+responseId+"'><i class='icon-refresh'></i>Update This Answer</a>");
+        if($('.menubar').eq(1).find('.menubar-main').find(".menubar-left:last").length) {
+            $('.menubar').eq(1).find('.menubar-main').find(".menubar-left:last").append("<a class='btn btn-small updateanswer' data-responseid='"+responseId+"'><i class='icon-refresh'></i>Update This Answer</a>");
+        } else {
+            $('#browsermenubarid .container-fluid .text-right').append("<a class='btn btn-default btn-small updateanswer' data-responseid='"+responseId+"'><i class='icon-refresh'></i>Update This Answer</a>");
+        }
         $('.updateanswer').click(function(){
-
             $("#updatedsrid").remove();
                 $.ajax({
                 url: jsonUrl,
@@ -76,11 +83,15 @@ function addUpdateResponse()
                 },
             });
         });
+        return;
     }
     if(surveyid){
-        $('.menubar').eq(0).find('.menubar-main').find(".menubar-left:last").append("<a class='btn btn-small updateanswers'><i class='icon-refresh'></i>Update all submitted answers</a>");
-            $(".updateanswers").click(function(){
-                var jsonurl=$(this).attr('rel');
+        if($('.menubar').eq(1).find('.menubar-main').find(".menubar-left:last").length) {
+            $('.menubar').eq(1).find('.menubar-main').find(".menubar-left:last").append("<a class='btn btn-small updateanswer' data-recompute='1'><i class='icon-refresh'></i>Update This Answer</a>");
+        } else {
+            $('#browsermenubarid .container-fluid .col-md-12').append("<a class='btn btn-small updateanswer' data-recompute='1'><i class='icon-refresh'></i>Update all submitted answers</a>");
+        }
+            $("[data-recompute]").click(function(){
                   $("#updatedsrid").remove();
                   var $dialog = $('<div id="updatedsrid" style="overflow-y:scroll"></div>')
                     .html("")
