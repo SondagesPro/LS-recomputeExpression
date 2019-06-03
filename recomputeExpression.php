@@ -7,7 +7,7 @@
  * @copyright 2013 Denis Chenu <http://sondages.pro>
  * @copyright 2013 Practice Lab <https://www.practicelab.com/>
  * @license GPL v3
- * @version 2.0.2
+ * @version 2.0.3
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -63,6 +63,9 @@ class recomputeExpression extends PluginBase
 
     public function afterPluginLoad()
     {
+        if (Yii::app() instanceof CConsoleApplication) {
+            return;
+        }
         if(strpos(Yii::app()->request->getRequestUri(),'admin/responses')){// Hack to register only on browse response
             $surveyid = Yii::app()->request->getparam('surveyid');
             $responseid = Yii::app()->request->getparam('id');
