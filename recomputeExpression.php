@@ -4,10 +4,10 @@
  * purpose is to offer abilty to recompute all expression in a survey
  *
  * @author Denis Chenu <denis@sondages.pro>
- * @copyright 2013 Denis Chenu <http://sondages.pro>
+ * @copyright 2013-2019 Denis Chenu <http://sondages.pro>
  * @copyright 2013 Practice Lab <https://www.practicelab.com/>
  * @license GPL v3
- * @version 2.0.3
+ * @version 2.0.4
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -80,6 +80,9 @@ class recomputeExpression extends PluginBase
     }
     public function newDirectRequest()
     {
+        if($this->getEvent()->get('target') != get_class($this)) {
+            return;
+        }
         $oEvent = $this->event;
         $bAllowNonAdmin = $this->get('bAllowNonAdmin');
         if (!$bAllowNonAdmin && !$this->api->checkAccess('administrator'))
