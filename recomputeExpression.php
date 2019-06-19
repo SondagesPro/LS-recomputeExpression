@@ -7,7 +7,7 @@
  * @copyright 2013-2019 Denis Chenu <http://sondages.pro>
  * @copyright 2013 Practice Lab <https://www.practicelab.com/>
  * @license GPL v3
- * @version 2.0.4
+ * @version 2.0.5
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -70,7 +70,7 @@ class recomputeExpression extends PluginBase
             $surveyid = Yii::app()->request->getparam('surveyid');
             $responseid = Yii::app()->request->getparam('id');
             $aRecomputeVar=array(
-                'jsonurl'=>$this->api->createUrl('plugins/direct', array('plugin' => 'recomputeExpression', 'function' => 'recompute')),
+                'jsonurl'=>Yii::app()->getController()->createUrl('plugins/direct', array('plugin' => 'recomputeExpression', 'function' => 'recompute')),
                 'surveyId'=>$surveyid,
                 'responseId'=>$responseid,
             );
@@ -96,7 +96,7 @@ class recomputeExpression extends PluginBase
     * 
     * @return json
     **/
-    public function actionRecompute()
+    private function actionRecompute()
     {
         // Needed parameters sid: the survey id
         $this->_iSurveyId = $iSurveyId=(int)Yii::app()->request->getQuery('sid', 0);
