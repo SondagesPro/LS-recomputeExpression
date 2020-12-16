@@ -4,7 +4,7 @@
  * purpose is to offer abilty to recompute all expression in a survey
  *
  * @author Denis Chenu <denis@sondages.pro>
- * @copyright 2013-2019 Denis Chenu <http://sondages.pro>
+ * @copyright 2013-2020 Denis Chenu <http://sondages.pro>
  * @copyright 2013 Practice Lab <https://www.practicelab.com/>
  * @license GPL v3
  * @version 2.0.5
@@ -63,6 +63,9 @@ class recomputeExpression extends PluginBase
 
     public function afterPluginLoad()
     {
+        if (!$this->getEvent()) {
+            throw new CHttpException(403);
+        }
         if (Yii::app() instanceof CConsoleApplication) {
             return;
         }
@@ -80,6 +83,9 @@ class recomputeExpression extends PluginBase
     }
     public function newDirectRequest()
     {
+        if (!$this->getEvent()) {
+            throw new CHttpException(403);
+        }
         if($this->getEvent()->get('target') != get_class($this)) {
             return;
         }
@@ -289,6 +295,7 @@ class recomputeExpression extends PluginBase
         }
         $this->displayJson();
     }
+
     private function displayJson()
     {
         Yii::import('application.helpers.viewHelper');
