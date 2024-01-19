@@ -19,6 +19,8 @@
  */
  
 $(document).on('ready pjax:scriptcomplete', function() {
+
+    console.log("rec var", recomputeVar);
     if(typeof recomputeVar!='undefined'){
         addUpdateResponse();
     }
@@ -31,82 +33,104 @@ function addUpdateResponse()
     var aUrl=docUrl.split('/');
     var surveyid=recomputeVar.surveyId;
     var responseId=recomputeVar.responseId;
+    var isResponsePage = recomputeVar.isResponsePage;
+    var route = recomputeVar.route;
     console.warn([
         surveyid,
         responseId,
         $('table.detailbrowsetable').length
     ]);
-    if(responseId && $('table.detailbrowsetable').length>0)// Browse one response
-    {
-        // OR var responseId= aUrl.pop();
-        if($('.menubar').eq(1).find('.menubar-main').find(".menubar-left:last").length) {
-            $('.menubar').eq(1).find('.menubar-main').find(".menubar-left:last").append("<a class='btn btn-small updateanswer' data-responseid='"+responseId+"'><i class='icon-refresh'></i>Update This Answer</a>");
-        } else {
-            $('#browsermenubarid .container-fluid .text-right').append("<a class='btn btn-default btn-small updateanswer' data-responseid='"+responseId+"'><i class='icon-refresh'></i>Update This Answer</a>");
-        }
-        $('.updateanswer').click(function(){
-            $("#updatedsrid").remove();
-                $.ajax({
-                url: jsonUrl,
-                dataType : 'json',
-                data : {sid: surveyid, srid: responseId},
-                success: function(data){
-                    var $dialog = $('<div id="updatedsrid"></div>')
-                        .html("<p>"+data.message+"</p>")
-                        .dialog({
-                            title: data.status,
-                            dialogClass: 'updatedsrid',
-                            buttons: { 
-                                "Ok": function() { $(this).dialog("close"); },
-                                "Reload": function() { window.location.reload(); } 
-                                },
-                            modal: true,
-                            close: function () {
-                                $(this).remove();
-                            }
-                        });
+    if (route === "responses/view" && isResponsePage && responseId) {
+      // Browse one response
+      // OR var responseId= aUrl.pop();
+      if (
+        $(".ls-topbar-buttons:last").length &&
+        $(".updateanswer").length === 0
+      ) {
+        $(".ls-topbar-buttons:last").append(
+          "<a class='btn btn-primary updateanswer' role='button' data-responseid='" +
+            responseId +
+            "'><i class='ri-restart-line'></i> Update This Answer</a>"
+        );
+      }
+      $(".updateanswer").click(function () {
+        $("#updatedsrid").remove();
+        $.ajax({
+          url: jsonUrl,
+          dataType: "json",
+          data: { sid: surveyid, srid: responseId },
+          success: function (data) {
+            var $dialog = $('<div id="updatedsrid"></div>')
+              .html("<p>" + data.message + "</p>")
+              .dialog({
+                title: data.status,
+                dialogClass: "updatedsrid",
+                buttons: {
+                  Ok: function () {
+                    $(this).dialog("close");
+                  },
+                  Reload: function () {
+                    window.location.reload();
+                  },
                 },
-                error: function(){
-                    var $dialog = $('<div id="updatedsrid"></div>')
-                        .html("<p>An error was occured</p>")
-                        .dialog({
-                            title: "Error",
-                            dialogClass: 'updatedsrid',
-                            buttons: { 
-                                "Ok": function() { $(this).dialog("close"); },
-                                },
-                            modal: true,
-                            close: function () {
-                                $(this).remove();
-                            }
-                        });
+                modal: true,
+                close: function () {
+                  $(this).remove();
                 },
-            });
+              });
+          },
+          error: function (err) {
+            console.log(err);
+            var $dialog = $('<div id="updatedsrid"></div>')
+              .html("<p>An error was occured</p>" + err)
+              .dialog({
+                title: "Error",
+                dialogClass: "updatedsrid",
+                buttons: {
+                  Ok: function () {
+                    $(this).dialog("close");
+                  },
+                },
+                modal: true,
+                close: function () {
+                  $(this).remove();
+                },
+              });
+          },
         });
-        return;
-    }
-    if(surveyid){
-        if($('.menubar').eq(1).find('.menubar-main').find(".menubar-left:last").length) {
-            $('.menubar').eq(1).find('.menubar-main').find(".menubar-left:last").append("<a class='btn btn-small updateanswer' data-recompute='1'><i class='icon-refresh'></i>Update This Answer</a>");
-        } else {
-            $('#browsermenubarid .container-fluid .col-md-12').append("<a class='btn btn-default btn-small updateanswer' data-recompute='1'><i class='icon-refresh'></i>Update all submitted answers</a>");
-        }
-            $("[data-recompute]").click(function(){
-                  $("#updatedsrid").remove();
-                  var $dialog = $('<div id="updatedsrid" style="overflow-y:scroll"></div>')
-                    .html("")
-                    .dialog({
-                      height: 200,
-                      title: "Status",
-                      dialogClass: 'updatedsrid',
-                      buttons: { Cancel: function() { $(this).dialog("close"); } },
-                      modal: true,
-                      close: function () {
-                          $(this).remove();
-                      }
-                  });
-                loopUpdateResponse(jsonUrl,surveyid,0);
-            });
+      });
+      return;
+    } else if (route === "responses/browse" && isResponsePage && surveyid) {
+      if (
+        $(".ls-topbar-buttons:last").length &&
+        $(".updateanswer").length === 0
+      ) {
+        $(".ls-topbar-buttons:last").append(
+          "<a class='btn btn-primary updateanswer' role='button' data-recompute='1'><i class='ri-restart-line'></i>Update All Answer</a>"
+        );
+      }
+      $("[data-recompute]").click(function () {
+        $("#updatedsrid").remove();
+        var $dialog = $(
+          '<div id="updatedsrid" style="overflow-y:scroll"></div>'
+        )
+          .html("")
+          .dialog({
+            height: 200,
+            title: "Status",
+            dialogClass: "updatedsrid",
+            buttons: {
+              Cancel: function () {
+                $(this).dialog("close");
+              },
+            },
+            modal: true,
+            close: function () {
+              $(this).remove();
+            },
+          });
+        loopUpdateResponse(jsonUrl, surveyid, 0);
+      });
     }
 }
 

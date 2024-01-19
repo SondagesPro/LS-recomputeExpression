@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <metadata>
+        <name>recomputeExpressionV6</name>
+        <type>plugin</type>
+        <creationDate>2016-11-04</creationDate>
+        <lastUpdate>2020-12-16</lastUpdate>
+        <author>Denis Chenu</author>
+        <authorUrl>https://www.sondages.pro</authorUrl>
+        <supportUrl>https://support.sondages.pro/</supportUrl>
+        <version>2.3.4</version>
+        <license>GNU Affero General Public License v3.0</license>
+        <description><![CDATA[A Plugin for LimeSurvey to recompute expression in survey and fix relevance]]></description>
+    </metadata>
+    <updaters disabled="disabled"></updaters>
+    <compatibility>
+        <version>6</version>
+    </compatibility>
+</config>
