@@ -54,6 +54,7 @@ class recomputeExpression extends PluginBase
     );
     protected $storage = 'DbStorage';
     public function init() {
+     
         // Add the script (everywhere)
         $this->subscribe('afterPluginLoad');
         //Can call plugin
@@ -69,17 +70,25 @@ class recomputeExpression extends PluginBase
         if (Yii::app() instanceof CConsoleApplication) {
             return;
         }
-        if(strpos(Yii::app()->request->getRequestUri(),'admin/responses')){// Hack to register only on browse response
-            $surveyid = Yii::app()->request->getparam('surveyid');
-            $responseid = Yii::app()->request->getparam('id');
-            $aRecomputeVar=array(
-                'jsonurl'=>Yii::app()->getController()->createUrl('plugins/direct', array('plugin' => 'recomputeExpression', 'function' => 'recompute')),
-                'surveyId'=>$surveyid,
-                'responseId'=>$responseid,
-            );
-            Yii::app()->getClientScript()->registerScript('aRecomputeVar','recomputeVar='.json_encode($aRecomputeVar),CClientScript::POS_BEGIN);
-            Yii::app()->getClientScript()->registerScriptFile(Yii::app()->assetManager->publish(dirname(__FILE__) . '/js/recompute.js'));
-        }
+        // Hack to register only on browse response
+        $event      = $this->getEvent();
+
+        //$surveyid = Yii::app()->request->getparam('surveyId');
+        $surveyid = Yii::app()->request->getparam('surveyId');
+
+        //$responseid = Yii::app()->request->getparam('id');
+        $responseid = Yii::app()->request->getparam('id');
+
+        $aRecomputeVar=array(
+            'jsonurl'=>Yii::app()->getController()->createUrl('plugins/direct', array('plugin' => 'recomputeExpression', 'function' => 'recompute')),
+            'surveyId'=> $surveyid,
+            'responseId' => $responseid,
+            'isResponsePage' => true,
+            'route' => Yii::app()->request->getPathInfo()
+        );
+
+        Yii::app()->getClientScript()->registerScript('aRecomputeVar','recomputeVar='.json_encode($aRecomputeVar),CClientScript::POS_BEGIN);
+        Yii::app()->getClientScript()->registerScriptFile(Yii::app()->assetManager->publish(dirname(__FILE__) . '/js/recompute.js'));
     }
     public function newDirectRequest()
     {
@@ -210,7 +219,7 @@ class recomputeExpression extends PluginBase
             'token' => (isset($sToken) ? $sToken : NULL),
             );
             LimeExpressionManager::SetDirtyFlag();
-            buildsurveysession($iSurveyId);
+            buildsurveysession($iSurveyId,false);
             foreach($aOldAnswers as $column=>$value){
                 if (in_array($column, $_SESSION['survey_'.$iSurveyId]['insertarray']) && isset($_SESSION['survey_'.$iSurveyId]['fieldmap'][$column]))
                 {
